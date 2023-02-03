@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title%} DoVocab{% endblock %}
+
+
+{% block body %}
+<div class="container mt-4">
+    {% for task in task %}
+    <div>
+        {% if task.test_unlock == 'False' and forloop.counter != 1 %}
+        <div style="border: 1px solid black; padding:10px;">
+            <div class="row">
+                <div class="col-10">
+            <a style="font-size: x-large; color: #066afe; text-decoration: underline;">{{task.title}}</a>
+
+                </div>
+                <div class="col-2">
+                    <i class="fas fa-lock"></i>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <div class="my-1" style="border: 1px solid black; padding:10px;">
+            <div class="row">
+                <div class="col-8">
+                    <a style="font-size: x-large;" href="/day/{{task.sno}}/test">{{task.title}}</a>
+                </div>
+                <div class="col-2">
+                    <h5><span class="badge text-bg-success">{{task.points}}/10</span></h5>
+
+                </div>
+                <div class="col-2 ">
+                    
+                    <i class="fas fa-lock-open"></i>
+                </div>
+            </div>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    {% endfor %}
+</div>
+
+{% endblock body %}
