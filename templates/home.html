@@ -3,6 +3,11 @@
 
 
 {% block body %}
+
+<h1 class="text-center my-4" style="color: #ce1a97; font-family: inherit;"><span id="typed"></span></h1>
+
+{% if not user.is_anonymous %}
+
 <div class="container mt-4">
     {% for task in task %}
     <div>
@@ -43,4 +48,34 @@
     {% endfor %}
 </div>
 
+{% else %}
+<div class="text-center">
+<h2 class="text-center">Login to see your daily task's</h2>
+
+<a style="background-color: #ce1a97; border: none;" href="/login/" type="button"
+class="btn btn-primary mx-1 my-1">Login</a>
+</div>
+
+{% endif %}
+
+
 {% endblock body %}
+
+
+{% block js %}
+
+<script>
+    var typed = new Typed('#typed',{
+              strings:["Your Daily Tasks",],
+              backSpeed: 15,
+              smartBackspace: true,
+              backDelay: 2200,
+              startDelay: 1000,
+              typeSpeed: 25,
+              loop: true,
+              showCursor: true,
+
+            });
+
+</script>
+{% endblock js %}
