@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% block title%} DoVocab{% endblock %}
+{% block body %}
+{% load extras %}
+
+<div class="container mt-4">
+    <div class="accordion" id="accordionExample">
+
+        {% for item in user  %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+
+
+
+                <button class="accordion-button" style="background-color: white;" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                    aria-controls="collapseOne">
+
+                    <b> Attempt # {{item.task.title}}</b>
+                    <b style="left: 60%; position: absolute;">Marks:{{item.points}}</b>
+                </button>
+
+
+
+
+            </h2>
+            
+            <div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne"
+                data-bs-parent="#accordionExample">
+
+                {% for item in item.task.sno|get_item %}
+                <div class="accordion-body">
+                    <div class="row">
+                        <div class="col-9">
+                            <b>Q NO: {{item.sno}}</b>
+                        </div>
+                        <div class="col-3">
+                            <b>Marks: 1/1</b>
+
+                        </div>
+                    </div>
+                    <div class="my-3">
+                        {{item.ques}}
+                    </div>
+
+                    <div class="container ">
+                        <div style="border: 1px solid black; border-radius: 10px; height: 40px; font-size: large;" class="my-1">
+                            <div class="row my-1 ">
+                                <div class="col-8">
+                                    <p class="mx-2">
+                                        {{item.opt1}}</p>
+
+                                </div>
+
+                                <div class="col-4">
+                                    {% if 1 == item.correct_opt %}
+                                    <span style="background-color: #8bcab9; border-radius: 15px; padding: 2px 4px;">
+                                        Correct Answer</span>
+                                    
+
+                                    {% endif %}
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="my-1" style="border: 1px solid black; border-radius:  10px; height: 40px; font-size: large;">
+                            <div class="row my-1 ">
+                                <div class="col-8">
+                                    <p class="mx-2">
+                                        {{item.opt2}}</p>
+
+                                </div>
+                                <div class="col-4">
+                                    {% if 2 == item.correct_opt %}
+
+                                    <span style="background-color: #8bcab9; border-radius: 15px; padding: 2px 4px;">
+                                        Correct Answer</span>
+                                    {% endif %}
+
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="my-1" style="border: 1px solid black; border-radius: 10px; height: 40px; font-size: large;">
+                            <div class="row my-1 ">
+                                <div class="col-8">
+                                    <p class="mx-2">
+                                        {{item.opt3}}</p>
+
+                                </div>
+                                <div class="col-4">
+                                    {% if 3 == item.correct_opt %}
+
+                                    <span style="background-color: #8bcab9; border-radius: 15px; padding: 2px 4px;">
+                                        Correct Answer</span>
+                                    {% endif %}
+                                    
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="my-1" style="border: 1px solid black; border-radius: 10px; height: 40px; font-size: large;">
+                            <div class="row my-1 ">
+                                <div class="col-8">
+                                    <p class="mx-2">
+                                        {{item.opt4}}</p>
+
+                                </div>
+                                <div class="col-4">
+                                    {% if 4 == item.correct_opt %}
+
+                                    <span style="background-color: #8bcab9; border-radius: 15px; padding: 2px 4px;">
+                                        Correct Answer</span>
+                                    
+                                    {% endif %}
+                                    
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            
+        </div>
+        {% endfor %}
+
+
+    </div>
+
+
+
+</div>
+{% endblock body %}

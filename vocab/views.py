@@ -1,5 +1,5 @@
 from django.shortcuts import render,HttpResponse,redirect
-from vocab.models import Question,Task_Result
+from vocab.models import Question,Task_Result,userdetail
 
 from django.contrib import messages
 
@@ -13,23 +13,30 @@ from django.contrib.auth import authenticate,login,logout
 
 
 def home(request):
-    task=Task_Result.objects.filter()
-    params={'task':task,'user':request.user}
-    return render(request,"home.html",params)
+    task1=userdetail.objects.filter(user=request.user)
+    print(task1)
+    params={'task':task1,'user':request.user}
+    return render(request,"home1.html",params)
 
 
 
 def test(request,myid):
     global val
-    val=myid
-    print(myid)
-    obj=Task_Result.objects.filter(sno=myid)[0]
+    if request.user.is_authenticated:
+        if request.method=="POST":
+            val=myid
+            print(myid)
+            obj=Task_Result.objects.filter(sno=myid)[0]
     
-    print(obj)
-    ques=Question.objects.filter(sno__gte=obj.s_range,sno__lte=obj.e_range)
-    print(ques)
-    params={'ques':ques}
-    return render(request,"ques.html",params)
+            print(obj)
+            ques=Question.objects.filter(sno__gte=obj.s_range,sno__lte=obj.e_range)
+            print(ques)
+            params={'ques':ques}
+            return render(request,"ques.html",params)
+        else:
+            return render(request,'404.html')
+    else:
+        return redirect('/')
 
 
 
@@ -39,6 +46,7 @@ def result(request):
     if request.method=="POST":
         res=request.POST.get('mytxt','')
         res=res[:len(res)-1]
+        choosen=res
         res1=res.split(',')
         obj=Question.objects.all()
         p=0
@@ -47,8 +55,10 @@ def result(request):
             if obj[i].correct_opt==res1[i]:
                 p+=1
         print("TOTAL POINTS",p)
-        Task_Result.objects.filter(sno=val).update(points=p,test_status="True")
-        Task_Result.objects.filter(sno=val+1).update(test_unlock="True")
+        userdetail.objects.filter(user=request.user,task=Task_Result.objects.filter(sno=val)[0]).update(test_status="True",points=p,user_choosen=choosen)
+        
+        userdetail2=userdetail(user=request.user,task=Task_Result.objects.filter(sno=val+1)[0],test_unlock="True")
+        userdetail2.save()
         return HttpResponse("yes")
 
 
@@ -85,6 +95,10 @@ def handleSignup(request):
         myuser.first_name=fname
         myuser.last_name=lname
         myuser.save()
+        
+        userdetail2=userdetail(user=username,task=Task_Result.objects.filter(sno=1)[0],test_unlock="True")
+        userdetail2.save()
+        
         messages.success(request,"Your FlyHigh account successfully created")
         return redirect('/')
 
@@ -100,7 +114,9 @@ def handleLogin(request):
         user=authenticate(username=loginusername, password=loginpassword)
         if user is not None:
             login(request,user)
+            
             messages.success(request,"Successfully Logged in")
+
             return redirect('/')
         else:
             messages.error(request,'Invalid Credentials, Please Try Again')
@@ -117,3 +133,9 @@ def handleLogout(request):
     logout(request)
     messages.success(request,'Successfully Logout')
     return redirect('/')
+
+
+def attempt_history(request):
+    userdetail1=userdetail.objects.filter(user=request.user,test_status="True")
+    print(userdetail1)
+    return render(request,'Attempt.html',{'user':userdetail1})

@@ -10,7 +10,7 @@ class Question(models.Model):
     opt3=models.CharField(max_length=200)
     opt4=models.CharField(max_length=200)
     correct=models.CharField(max_length=200)
-    correct_opt=models.CharField(max_length=10)
+    correct_opt=models.IntegerField()
 
 
 class Task_Result(models.Model):
@@ -18,8 +18,15 @@ class Task_Result(models.Model):
     title=models.CharField(max_length=100)
     s_range=models.IntegerField()
     e_range=models.IntegerField()
+
+class userdetail(models.Model):
+    user=models.CharField(max_length=100,default="")
+    sno=models.AutoField(primary_key=True)
+    task=models.ForeignKey(Task_Result,on_delete=models.CASCADE)
     test_status=models.CharField(max_length=50,default='False')
     test_unlock=models.CharField(max_length=50,default="False")
     points=models.IntegerField(default=0)
+    user_choosen=models.CharField(max_length=50,default='')
+
 
 

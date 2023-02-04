@@ -1,6 +1,17 @@
 {% extends 'base.html' %}
 {% block title%} DoVocab{% endblock %}
 
+{% block css %}
+<style>
+    input {
+        background-color: white;
+        border: none;
+        text-decoration: underline;
+        color: blue;
+        font-size: x-large;
+    }
+</style>
+{% endblock css %}
 
 {% block body %}
 
@@ -15,7 +26,7 @@
         <div style="border: 1px solid black; padding:10px;">
             <div class="row">
                 <div class="col-10">
-            <a style="font-size: x-large; color: #066afe; text-decoration: underline;">{{task.title}}</a>
+                    <a style="font-size: x-large; color: #066afe; text-decoration: underline;">{{task.task.title}}</a>
 
                 </div>
                 <div class="col-2">
@@ -28,14 +39,16 @@
         <div class="my-1" style="border: 1px solid black; padding:10px;">
             <div class="row">
                 <div class="col-8">
-                    <a style="font-size: x-large;" href="/day/{{task.sno}}/test">{{task.title}}</a>
+                    <form action="/day/{{task.task.sno}}/test" method="post">{% csrf_token %}
+                        <input type="submit" value="{{task.task.title}}">
+                    </form>
                 </div>
                 <div class="col-2">
                     <h5><span class="badge text-bg-success">{{task.points}}/10</span></h5>
 
                 </div>
                 <div class="col-2 ">
-                    
+
                     <i class="fas fa-lock-open"></i>
                 </div>
             </div>
@@ -50,10 +63,10 @@
 
 {% else %}
 <div class="text-center">
-<h2 class="text-center">Login to see your daily task's</h2>
+    <h2 class="text-center">Login to see your daily task's</h2>
 
-<a style="background-color: #ce1a97; border: none;" href="/login/" type="button"
-class="btn btn-primary mx-1 my-1">Login</a>
+    <a style="background-color: #ce1a97; border: none;" href="/login/" type="button"
+        class="btn btn-primary mx-1 my-1">Login</a>
 </div>
 
 {% endif %}
@@ -65,17 +78,17 @@ class="btn btn-primary mx-1 my-1">Login</a>
 {% block js %}
 
 <script>
-    var typed = new Typed('#typed',{
-              strings:["Your Daily Tasks",],
-              backSpeed: 15,
-              smartBackspace: true,
-              backDelay: 2200,
-              startDelay: 1000,
-              typeSpeed: 25,
-              loop: true,
-              showCursor: true,
+    var typed = new Typed('#typed', {
+        strings: ["Your Daily Tasks",],
+        backSpeed: 15,
+        smartBackspace: true,
+        backDelay: 2200,
+        startDelay: 1000,
+        typeSpeed: 25,
+        loop: true,
+        showCursor: true,
 
-            });
+    });
 
 </script>
 {% endblock js %}
