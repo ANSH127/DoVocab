@@ -2,8 +2,10 @@
 {% block title%} DoVocab{% endblock %}
 {% block body %}
 {% load extras %}
+{% load extras2 %}
 
 <div class="container mt-4">
+    <h2 style="color:#ce1a97;"><span id="typed"></span> </h2>
     <div class="accordion" id="accordionExample">
 
         {% for item in user  %}
@@ -28,73 +30,55 @@
             <div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne"
                 data-bs-parent="#accordionExample">
 
-                {% for item in item.task.sno|get_item %}
+                {% for item1 in item.task.sno|get_item %}
                 <div class="accordion-body">
                     <div class="row">
                         <div class="col-9">
-                            <b>Q NO: {{item.sno}}</b>
+                            <b>Q NO: {{item1.sno}}</b>
+                            {% if item1.correct_opt ==  item.user_choosen|check:forloop.counter %}
+
+                            <h5><span class="badge text-bg-info mx-3">Correct Answer</span></h5>
+                            {% endif %}
+
+
                         </div>
                         <div class="col-3">
+                            {% if item1.correct_opt ==  item.user_choosen|check:forloop.counter %}
+
                             <b>Marks: 1/1</b>
+                            {% else %}
+                            <b>Marks: 0/1</b>
+
+                            {% endif %}
+
 
                         </div>
                     </div>
                     <div class="my-3">
-                        {{item.ques}}
+                        {{item1.ques}}
                     </div>
-
+                    {% comment %} {{item.user_choosen|check:forloop.counter}} {% endcomment %}
                     <div class="container ">
-                        <div style="border: 1px solid black; border-radius: 10px; height: 40px; font-size: large;" class="my-1">
+                        <div style="border: 1px solid black; border-radius: 10px; height: 60px; font-size: large;" class="my-1">
                             <div class="row my-1 ">
-                                <div class="col-8">
+                                <div class="col-7">
                                     <p class="mx-2">
-                                        {{item.opt1}}</p>
+                                        {{item1.opt1}}</p>
 
                                 </div>
 
-                                <div class="col-4">
-                                    {% if 1 == item.correct_opt %}
-                                    <span style="background-color: #8bcab9; border-radius: 15px; padding: 2px 4px;">
-                                        Correct Answer</span>
+                                <div class="col-5">
+                                    {% if 1 == item1.correct_opt %}
+                                        <span class="badge text-bg-success">Correct Option</span>
+                                        
+
+                                        
+
+                                    {% endif %}
+                                    {% if 1 ==  item.user_choosen|check:forloop.counter %}
                                     
-
-                                    {% endif %}
-
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="my-1" style="border: 1px solid black; border-radius:  10px; height: 40px; font-size: large;">
-                            <div class="row my-1 ">
-                                <div class="col-8">
-                                    <p class="mx-2">
-                                        {{item.opt2}}</p>
-
-                                </div>
-                                <div class="col-4">
-                                    {% if 2 == item.correct_opt %}
-
-                                    <span style="background-color: #8bcab9; border-radius: 15px; padding: 2px 4px;">
-                                        Correct Answer</span>
-                                    {% endif %}
-
-
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="my-1" style="border: 1px solid black; border-radius: 10px; height: 40px; font-size: large;">
-                            <div class="row my-1 ">
-                                <div class="col-8">
-                                    <p class="mx-2">
-                                        {{item.opt3}}</p>
-
-                                </div>
-                                <div class="col-4">
-                                    {% if 3 == item.correct_opt %}
-
-                                    <span style="background-color: #8bcab9; border-radius: 15px; padding: 2px 4px;">
-                                        Correct Answer</span>
+                                    <span class="badge text-bg-danger">You Selected</span>
+                                        
                                     {% endif %}
                                     
 
@@ -102,19 +86,74 @@
                             </div>
 
                         </div>
-                        <div class="my-1" style="border: 1px solid black; border-radius: 10px; height: 40px; font-size: large;">
+                        <div class="my-1" style="border: 1px solid black; border-radius:  10px; height: 60px; font-size: large;">
                             <div class="row my-1 ">
-                                <div class="col-8">
+                                <div class="col-7">
                                     <p class="mx-2">
-                                        {{item.opt4}}</p>
+                                        {{item1.opt2}}</p>
 
                                 </div>
-                                <div class="col-4">
-                                    {% if 4 == item.correct_opt %}
+                                <div class="col-5">
+                                    {% if 2 == item1.correct_opt %}
 
-                                    <span style="background-color: #8bcab9; border-radius: 15px; padding: 2px 4px;">
-                                        Correct Answer</span>
+                                        <span class="badge text-bg-success">Correct Option</span>
+
+                                    {% endif %}
+                                    {% if 2 ==  item.user_choosen|check:forloop.counter %}
+                                    <div>
+                                    <span class="badge text-bg-danger">You Selected</span>
+                                     </div>
+
+                                        
+                                    {% endif %}
+
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="my-1" style="border: 1px solid black; border-radius: 10px; height: 60px; font-size: large;">
+                            <div class="row my-1 ">
+                                <div class="col-7">
+                                    <p class="mx-2">
+                                        {{item1.opt3}}</p>
+
+                                </div>
+                                <div class="col-5">
+                                    {% if 3 == item1.correct_opt %}
+
+                                        <span class="badge text-bg-success">Correct Option</span>
+
+                                    {% endif %}
+                                    {% if 3 ==  item.user_choosen|check:forloop.counter %}
+                                    <span class="badge text-bg-danger">You Selected</span>
+
+                                        
+                                    {% endif %}
                                     
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="my-1" style="border: 1px solid black; border-radius: 10px; height: 60px; font-size: large;">
+                            <div class="row my-1 ">
+                                <div class="col-7">
+                                    <p class="mx-2">
+                                        {{item1.opt4}}</p>
+
+                                </div>
+                                <div class="col-5">
+                                    {% if 4 == item1.correct_opt %}
+
+                                    <span class="badge text-bg-success">Correct Option</span>
+
+                                    
+                                    {% endif %}
+                                    {% if 4 ==  item.user_choosen|check:forloop.counter %}
+                                    
+                                    <span class="badge text-bg-danger">You Selected</span>
+
                                     {% endif %}
                                     
 
@@ -138,3 +177,21 @@
 
 </div>
 {% endblock body %}
+
+
+{% block js %}
+
+<script>
+    var typed = new Typed('#typed', {
+        strings: ["Attempt History",],
+        backSpeed: 15,
+        smartBackspace: true,
+        backDelay: 2200,
+        startDelay: 1000,
+        typeSpeed: 25,
+        loop: false,
+        showCursor: true,
+
+    });
+</script>
+{% endblock js %}

@@ -16,6 +16,20 @@
 
 </head>
 {% block css %}{% endblock css %}
+<style>
+    @media only screen and (max-width: 1170px) {
+        #dropdown {
+
+            margin-left: 1px !important;
+        }
+
+
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+</style>
 
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -35,14 +49,19 @@
                         <a class="nav-link" href="/attempt_history/">Attempt History</a>
                     </li>
                 </ul>
-                {% if not user.is_authenticated %}
-
+                {% block prog %}
+                {% endblock prog %}
+                {% if not request.user.is_authenticated %}
                 <a style="background-color: #0ec5e9; border: none;" href="/login/" type="button"
                     class="btn btn-primary mx-1 my-1">Login</a>
 
                 <a style="background-color: #0ec5e9; border: none;" href="/signup/" type="button"
                     class="btn btn-primary mx-1 my-1">SignUp</a>
                 {% else %}
+
+
+
+
                 <div class="dropdown show">
                     <a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">

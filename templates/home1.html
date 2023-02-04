@@ -1,19 +1,35 @@
 {% extends 'base.html' %}
 {% block title%} DoVocab{% endblock %}
 
+
+{% block prog %}
+<div>
+    <p style="height: 8px ; margin-left: 25px;"><span id="count">{{count}}</span>/300 questions solved</p>
+    <div class="progress mx-3" role="progressbar" aria-label="Example with label" aria-valuenow="25"
+    aria-valuemin="0" aria-valuemax="100" style="width: 200px;">
+    
+    <div class="progress-bar bg-success" id="progressbar"></div>
+</div>
+</div>
+{% endblock prog %}
+
 {% block css %}
 <style>
     input {
-        background-color: white;
+        background-color: wheat;
         border: none;
         text-decoration: underline;
         color: blue;
         font-size: x-large;
     }
+    body {
+        /* background: url('/media/pexels-rafael-guajardo-604684.jpg') no-repeat center center; */
+    }
 </style>
 {% endblock css %}
 
 {% block body %}
+
 
 <h1 class="text-center my-4" style="color: #ce1a97; font-family: inherit;"><span id="typed"></span></h1>
 
@@ -23,7 +39,7 @@
     {% for task in task %}
     <div>
         {% if task.test_unlock == 'False' and forloop.counter != 1 %}
-        <div style="border: 1px solid black; padding:10px;">
+        <div style="border: 1px solid black; padding:10px; background-color: wheat;">
             <div class="row">
                 <div class="col-10">
                     <a style="font-size: x-large; color: #066afe; text-decoration: underline;">{{task.task.title}}</a>
@@ -36,20 +52,40 @@
         </div>
 
         {% else %}
-        <div class="my-1" style="border: 1px solid black; padding:10px;">
+        <div class="my-1" style="border: 1px solid black; padding:10px; background-color: wheat;">
             <div class="row">
                 <div class="col-8">
+                    {% if task.test_status == "True" %}
+
+                        <input type="submit" value="{{task.task.title}}">
+                        <span class="badge text-bg-success">Completed</span>
+
+                    
+                    {% else %}
                     <form action="/day/{{task.task.sno}}/test" method="post">{% csrf_token %}
                         <input type="submit" value="{{task.task.title}}">
+                        <span class="badge text-bg-warning">Pending</span>
+
                     </form>
+                    {% endif %}
+
+
                 </div>
+
                 <div class="col-2">
                     <h5><span class="badge text-bg-success">{{task.points}}/10</span></h5>
 
                 </div>
                 <div class="col-2 ">
+                    {% if task.test_status == "True" %}
+
+                    <i class="fas fa-check-circle"></i>
+
+                    {% else %}
 
                     <i class="fas fa-lock-open"></i>
+                    {% endif %}
+
                 </div>
             </div>
         </div>
@@ -89,6 +125,14 @@
         showCursor: true,
 
     });
+
+    let x1=document.getElementById('count').innerHTML
+    console.log(x1)
+    let percent=Math.ceil(parseInt(x1)*100/300)
+    console.log(percent)
+    document.getElementById('progressbar').style.width=percent+"%";
+
+
 
 </script>
 {% endblock js %}

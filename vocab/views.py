@@ -5,6 +5,7 @@ from django.contrib import messages
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
+import math
 # Create your views here.
 
 
@@ -14,8 +15,18 @@ from django.contrib.auth import authenticate,login,logout
 
 def home(request):
     task1=userdetail.objects.filter(user=request.user)
-    print(task1)
-    params={'task':task1,'user':request.user}
+    # print(task1)
+    progress=userdetail.objects.filter(user=request.user,test_status="True")
+    # print(progress)
+    c=0
+    for i in progress:
+        c+=i.points
+
+    # print(c)
+    Percent=math.ceil(c*100/300)
+    # print(Percent)
+
+    params={'task':task1,'user':request.user,'count':c,'percent':Percent}
     return render(request,"home1.html",params)
 
 
@@ -28,9 +39,9 @@ def test(request,myid):
             print(myid)
             obj=Task_Result.objects.filter(sno=myid)[0]
     
-            print(obj)
+            # print(obj)
             ques=Question.objects.filter(sno__gte=obj.s_range,sno__lte=obj.e_range)
-            print(ques)
+            # print(ques)
             params={'ques':ques}
             return render(request,"ques.html",params)
         else:
@@ -49,17 +60,20 @@ def result(request):
         choosen=res
         res1=res.split(',')
         obj=Question.objects.all()
+        
         p=0
         for i in range(len(obj)):
             print(obj[i].correct_opt)
-            if obj[i].correct_opt==res1[i]:
+            if str(obj[i].correct_opt)==res1[i]:
                 p+=1
-        print("TOTAL POINTS",p)
+        # print("TOTAL POINTS",p)
         userdetail.objects.filter(user=request.user,task=Task_Result.objects.filter(sno=val)[0]).update(test_status="True",points=p,user_choosen=choosen)
         
         userdetail2=userdetail(user=request.user,task=Task_Result.objects.filter(sno=val+1)[0],test_unlock="True")
         userdetail2.save()
         return HttpResponse("yes")
+    else:
+        return render(request,'404.html')
 
 
 
