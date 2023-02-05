@@ -12,6 +12,9 @@ class Question(models.Model):
     correct=models.CharField(max_length=200)
     correct_opt=models.IntegerField()
 
+    def __str__(self):
+        return "sno "+str(self.sno)+" Question "+self.ques
+
 
 class Task_Result(models.Model):
     sno=models.AutoField(primary_key=True)

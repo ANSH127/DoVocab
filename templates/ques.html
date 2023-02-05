@@ -23,6 +23,10 @@
         top: 50%;
         transform: translateY(-50%);
     }
+
+    body {
+        background: url('/media/pexels-abdullah-ghatasheh-1631677.jpg') no-repeat center center;
+    }
 </style>
 
 
@@ -31,128 +35,135 @@
 
 
 
-<div class="row" style="width: 100%; position: absolute; top: 35%;">
+    <div class="row" style="width: 100%; position: absolute; top: 35%;">
+        <input type="hidden" value="{{start}}" id="range">
+        <div id="carouselExampleControls" class="carousel slide">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    {% for item in ques %}
 
-    <div id="carouselExampleControls" class="carousel slide">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                {% for item in ques %}
 
+                    <h3 style="color: brown;" class="text-center">Ques. {{forloop.counter}}/10</h3>
+                    <div class="card text-bg-info mb-3"
+                        style="max-width: 18rem; display: grid; margin: auto; font-size: large; ">
+                        <div class="card-header"><b> {{item.ques}} </b></div>
+                        <ul class="list-group list-group-flush">
+                            <input type="radio" style="display: none;" id="5" name="opt{{item.sno}}" value="0" checked
+                                required>
 
+                            <li class="list-group-item">
+                                <input type="radio" id="1" name="opt{{item.sno}}" value="1" required>
+                                <label for="1">{{item.opt1}}</label>
+                            </li>
+                            <li class="list-group-item">
 
-                <div class="card text-bg-info mb-3"
-                    style="max-width: 18rem; display: grid; margin: auto; font-size: large; ">
-                    <div class="card-header">{{item.ques}}</div>
-                    <ul class="list-group list-group-flush">
-                        <input type="radio" style="display: none;" id="5" name="opt{{item.sno}}" value="0" checked
-                            required>
+                                <input type="radio" id="2" name="opt{{item.sno}}" value="2" required>
+                                <label for="2">{{item.opt2}}</label>
 
-                        <li class="list-group-item">
-                            <input type="radio" id="1" name="opt{{item.sno}}" value="1" required>
-                            <label for="1">{{item.opt1}}</label>
-                        </li>
-                        <li class="list-group-item">
+                            </li>
+                            <li class="list-group-item">
 
-                            <input type="radio" id="2" name="opt{{item.sno}}" value="2" required>
-                            <label for="2">{{item.opt2}}</label>
+                                <input type="radio" id="3" name="opt{{item.sno}}" value="3" required>
+                                <label for="3">
+                                    {{item.opt3}}
 
-                        </li>
-                        <li class="list-group-item">
+                                </label>
 
-                            <input type="radio" id="3" name="opt{{item.sno}}" value="3" required>
-                            <label for="3">
-                                {{item.opt3}}
+                            </li>
+                            <li class="list-group-item">
 
-                            </label>
+                                <input type="radio" id="4" name="opt{{item.sno}}" value="4" required>
+                                <label for="4">
 
-                        </li>
-                        <li class="list-group-item">
+                                    {{item.opt4}}
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                    {% if forloop.counter|divisibleby:1 and forloop.counter > 0 and not forloop.last%}
 
-                            <input type="radio" id="4" name="opt{{item.sno}}" value="4" required>
-                            <label for="4">
-
-                                {{item.opt4}}
-                            </label>
-                        </li>
-                    </ul>
                 </div>
-                {% if forloop.counter|divisibleby:1 and forloop.counter > 0 and not forloop.last%}
+
+                <div class="carousel-item">
+                    {% endif %}
+                    {% endfor %}
+
+                </div>
+
+
 
             </div>
 
-            <div class="carousel-item">
-                {% endif %}
-                {% endfor %}
+            <div class="row">
+                <div class="mt-4 text-center">
 
-            </div>
+                    <span class="mt-4 text-center ">
 
+                        <button class="btn btn-info text-center mx-3" type="button" id="btn1"
+                            data-bs-target="#carouselExampleControls" onclick="func1()" data-bs-slide="next">Skip
+                        </button>
+                        <button class="btn btn-info text-center mx-3" type="button" id="btn2"
+                            data-bs-target="#carouselExampleControls" data-interval="false" data-bs-slide="next"
+                            onclick="func()">Save and
+                            next</button>
+                        <form action="/result/" method="post">{% csrf_token %}
+                            <input type="hidden" id="mytxt" name="mytxt" value="">
 
+                            <input type="submit" id="btn3" onclick="func()" class="btn btn-info text-center"
+                                style="display: none; left: 40%; position: absolute;" value="Submit">
+                        </form>
 
-        </div>
-
-        <div class="row">
-            <div class="mt-4 text-center">
-
-                <span class="mt-4 text-center ">
-
-                    <button class="btn btn-info text-center mx-3" type="button" id="btn1"
-                        data-bs-target="#carouselExampleControls" onclick="func1()" data-bs-slide="next">Skip
-                    </button>
-                    <button class="btn btn-info text-center mx-3" type="button" id="btn2"
-                        data-bs-target="#carouselExampleControls" data-interval="false" data-bs-slide="next"
-                        onclick="func()">Save and
-                        next</button>
-                    <form action="/result/" method="post">{% csrf_token %}
-                        <input type="hidden" id="mytxt" name="mytxt" value="">
-
-                        <input type="submit" id="btn3" onclick="func()" class="btn btn-info text-center"
-                            style="display: none; left: 40%; position: absolute;" value="Submit">
-                    </form>
-
-                </span>
+                    </span>
+                </div>
             </div>
         </div>
-        {% endblock body %}
+    </div>
 
-        {% block js %}
-        <script>
-            var x = 0
-            var res = ''
-            function func() {
-                x = x + 1
-                console.log('yay')
+    {% endblock body %}
 
-
-
-                var ele = document.getElementsByName('opt' + String(x));
-
-                for (i = 0; i < ele.length; i++) {
-                    if (ele[i].checked) {
-                        console.log(ele[i].value);
-                        res = res + ele[i].value + ","
-                        document.getElementById('mytxt').value = res;
+    {% block js %}
+    <script>
+        ran=document.getElementById('range').value
+        // console.log(ran)
+        var x = parseInt(ran)-1
+        var end=x+9
+        var res = ''
+        function func() {
+            x = x + 1
+            console.log('yay')
 
 
-                    }
-                }
-                console.log(res)
 
+            var ele = document.getElementsByName('opt' + String(x));
+            console.log(ele)
 
-                if (x == 3) {
-
-                    document.getElementById("btn1").style.display = "none";
-                    document.getElementById("btn2").style.display = "none";
-                    document.getElementById("btn3").style.display = "block";
+            for (i = 0; i < ele.length; i++) {
+                if (ele[i].checked) {
+                    console.log(ele[i].value);
+                    res = res + ele[i].value + ","
+                    document.getElementById('mytxt').value = res;
 
 
                 }
             }
+            console.log(res)
 
 
-            function func1() {
+            if (x == end) {
+
+                document.getElementById("btn1").style.display = "none";
+                document.getElementById("btn2").style.display = "none";
+                document.getElementById("btn3").style.display = "block";
+
 
             }
+        }
 
-        </script>
+        
 
-        {% endblock js %}
+
+
+
+    </script>
+
+    {% endblock js %}

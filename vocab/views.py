@@ -32,17 +32,19 @@ def home(request):
 
 
 def test(request,myid):
-    global val
+    global val,start,end
     if request.user.is_authenticated:
         if request.method=="POST":
             val=myid
             print(myid)
             obj=Task_Result.objects.filter(sno=myid)[0]
+            start=obj.s_range
+            end=obj.e_range
     
             # print(obj)
             ques=Question.objects.filter(sno__gte=obj.s_range,sno__lte=obj.e_range)
-            # print(ques)
-            params={'ques':ques}
+            print(ques)
+            params={'ques':ques,'start':start}
             return render(request,"ques.html",params)
         else:
             return render(request,'404.html')
@@ -52,15 +54,18 @@ def test(request,myid):
 
 
 def result(request):
-    global val
+    global val,start,end
     print(val)
+    print(start,end)
     if request.method=="POST":
         res=request.POST.get('mytxt','')
+        print(res)
         res=res[:len(res)-1]
         choosen=res
         res1=res.split(',')
-        obj=Question.objects.all()
-        
+        obj=Question.objects.filter(sno__gte=start,sno__lte=end)
+        print(obj)
+        print(res1)
         p=0
         for i in range(len(obj)):
             print(obj[i].correct_opt)
@@ -68,9 +73,8 @@ def result(request):
                 p+=1
         # print("TOTAL POINTS",p)
         userdetail.objects.filter(user=request.user,task=Task_Result.objects.filter(sno=val)[0]).update(test_status="True",points=p,user_choosen=choosen)
+        userdetail.objects.filter(user=request.user,task=Task_Result.objects.filter(sno=val+1)[0]).update(test_unlock="True")
         
-        userdetail2=userdetail(user=request.user,task=Task_Result.objects.filter(sno=val+1)[0],test_unlock="True")
-        userdetail2.save()
         return HttpResponse("yes")
     else:
         return render(request,'404.html')
@@ -111,9 +115,19 @@ def handleSignup(request):
         myuser.save()
         
         userdetail2=userdetail(user=username,task=Task_Result.objects.filter(sno=1)[0],test_unlock="True")
+
         userdetail2.save()
+
+        for i in range(2,4):
+            userdetail2=userdetail(user=username,task=Task_Result.objects.filter(sno=i)[0])
+            userdetail2.save()
+
         
-        messages.success(request,"Your FlyHigh account successfully created")
+        user=authenticate(username=username, password=password)
+        login(request,user)
+
+
+        messages.success(request,"Your DoVocab's account successfully created")
         return redirect('/')
 
 
@@ -153,3 +167,29 @@ def attempt_history(request):
     userdetail1=userdetail.objects.filter(user=request.user,test_status="True")
     print(userdetail1)
     return render(request,'Attempt.html',{'user':userdetail1})
+
+
+
+def refresh(request):
+    print(request.user)
+    task=Task_Result.objects.all()
+    for i in range(len(task)):
+        userdetail2=userdetail.objects.filter(user=request.user,task=task[i])
+        if len(userdetail2)>=1:
+            # print('true')
+            status=(userdetail2[0].test_unlock)
+        else:
+            if status=="True":
+                
+                userdetail2=userdetail(user=request.user,task=task[i],test_unlock="True")
+                userdetail2.save()
+                status=None
+
+            
+            else:
+                userdetail2=userdetail(user=request.user,task=task[i])
+                userdetail2.save()
+        # print(userdetail2)
+            
+
+    return redirect('/')

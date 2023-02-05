@@ -39,10 +39,12 @@
     {% for task in task %}
     <div>
         {% if task.test_unlock == 'False' and forloop.counter != 1 %}
-        <div style="border: 1px solid black; padding:10px; background-color: wheat;">
-            <div class="row">
+        <div class="my-1" style="border: 1px solid black; padding:10px; background-color: wheat;">
+            <div class="row " style="margin-left: -5px;">
                 <div class="col-10">
-                    <a style="font-size: x-large; color: #066afe; text-decoration: underline;">{{task.task.title}}</a>
+                    <a style="font-size: x-large; color: blue; text-decoration: underline;">{{task.task.title}}</a>
+                    <span class="badge text-bg-danger mx-1">Locked</span>
+
 
                 </div>
                 <div class="col-2">
@@ -107,6 +109,30 @@
 
 {% endif %}
 
+<footer class="text-center text-white" style="background-color: #f1f1f1;">
+
+    <div class="text-center text-dark mt-3" id="foot" style="background-color: white; color: #7e22ce !important;bottom: 0; margin-top: 50px !important; ">
+
+
+
+        © 2023 Copyright:
+        <a class="text-dark" href="https://DoVocab's.com/">DoVocab's.com</a>
+
+        <!-- Instagram -->
+        <a class="btn btn-link btn-floating btn-lg text-dark" target="_blank" href="https://www.instagram.com/i_agarwal_ansh/"
+            role="button" data-mdb-ripple-color="dark"><i class="fab fa-instagram"></i></a>
+
+        <!-- Linkedin -->
+        <a class="btn btn-link btn-floating btn-lg text-dark" target="_blank" href="https://www.linkedin.com/in/ansh-agarwal-390797253/"
+            role="button" data-mdb-ripple-color="dark" style="margin: -15px !important;"><i
+                class="fab fa-linkedin"></i></a>
+        <!-- Github -->
+        <a class="btn btn-link btn-floating btn-lg text-dark" target="_blank" href="https://github.com/the-error4-0-4" role="button"
+            data-mdb-ripple-color="dark"><i class="fab fa-github"></i></a>
+
+    </div>
+    <!-- Copyright -->
+</footer>
 
 {% endblock body %}
 
@@ -115,7 +141,7 @@
 
 <script>
     var typed = new Typed('#typed', {
-        strings: ["Your Daily Tasks",],
+        strings: ["Your Daily Tasks","1st Week Challenge",'Complete this to proceed'],
         backSpeed: 15,
         smartBackspace: true,
         backDelay: 2200,
