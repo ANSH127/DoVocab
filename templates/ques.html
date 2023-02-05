@@ -130,23 +130,23 @@
         var res = ''
         function func() {
             x = x + 1
-            console.log('yay')
+            // console.log('yay')
 
 
 
             var ele = document.getElementsByName('opt' + String(x));
-            console.log(ele)
+            // console.log(ele)
 
             for (i = 0; i < ele.length; i++) {
                 if (ele[i].checked) {
-                    console.log(ele[i].value);
+                    // console.log(ele[i].value);
                     res = res + ele[i].value + ","
                     document.getElementById('mytxt').value = res;
 
 
                 }
             }
-            console.log(res)
+            // console.log(res)
 
 
             if (x == end) {

@@ -36,14 +36,14 @@ def test(request,myid):
     if request.user.is_authenticated:
         if request.method=="POST":
             val=myid
-            print(myid)
+            # print(myid)
             obj=Task_Result.objects.filter(sno=myid)[0]
             start=obj.s_range
             end=obj.e_range
     
             # print(obj)
             ques=Question.objects.filter(sno__gte=obj.s_range,sno__lte=obj.e_range)
-            print(ques)
+            # print(ques)
             params={'ques':ques,'start':start}
             return render(request,"ques.html",params)
         else:
@@ -54,30 +54,35 @@ def test(request,myid):
 
 
 def result(request):
-    global val,start,end
-    print(val)
-    print(start,end)
-    if request.method=="POST":
-        res=request.POST.get('mytxt','')
-        print(res)
-        res=res[:len(res)-1]
-        choosen=res
-        res1=res.split(',')
-        obj=Question.objects.filter(sno__gte=start,sno__lte=end)
-        print(obj)
-        print(res1)
-        p=0
-        for i in range(len(obj)):
-            print(obj[i].correct_opt)
-            if str(obj[i].correct_opt)==res1[i]:
-                p+=1
-        # print("TOTAL POINTS",p)
-        userdetail.objects.filter(user=request.user,task=Task_Result.objects.filter(sno=val)[0]).update(test_status="True",points=p,user_choosen=choosen)
-        userdetail.objects.filter(user=request.user,task=Task_Result.objects.filter(sno=val+1)[0]).update(test_unlock="True")
+    try:
+        global val,start,end
+        # print(val)
+        print(start,end)
+        if request.method=="POST":
+            res=request.POST.get('mytxt','')
+            # print(res)
+            res=res[:len(res)-1]
+            choosen=res
+            res1=res.split(',')
+            obj=Question.objects.filter(sno__gte=start,sno__lte=end)
+            # print(obj)
+            # print(res1)
+            p=0
+            for i in range(len(obj)):
+                # print(obj[i].correct_opt)
+                if str(obj[i].correct_opt)==res1[i]:
+                    p+=1
+            # print("TOTAL POINTS",p)
+            userdetail.objects.filter(user=request.user,task=Task_Result.objects.filter(sno=val)[0]).update(test_status="True",points=p,user_choosen=choosen)
+            userdetail.objects.filter(user=request.user,task=Task_Result.objects.filter(sno=val+1)[0]).update(test_unlock="True")
         
-        return HttpResponse("yes")
-    else:
+            return redirect("/")
+        else:
+            return render(request,'404.html')
+    
+    except:
         return render(request,'404.html')
+
 
 
 
@@ -91,7 +96,7 @@ def handleSignup(request):
         signup_email=request.POST.get('signup_email','')
         password=request.POST.get('password','')
         password1=request.POST.get('password1','')
-        print(username,name,signup_email,password,password1)
+        # print(username,name,signup_email,password,password1)
         fname=name.split()[0]
         lname=name.split()[1]
         # username should be atleast 10 character long
@@ -165,13 +170,13 @@ def handleLogout(request):
 
 def attempt_history(request):
     userdetail1=userdetail.objects.filter(user=request.user,test_status="True")
-    print(userdetail1)
+    # print(userdetail1)
     return render(request,'Attempt.html',{'user':userdetail1})
 
 
 
 def refresh(request):
-    print(request.user)
+    # print(request.user)
     task=Task_Result.objects.all()
     for i in range(len(task)):
         userdetail2=userdetail.objects.filter(user=request.user,task=task[i])
