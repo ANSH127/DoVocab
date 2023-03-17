@@ -32,4 +32,3 @@ class userdetail(models.Model):
     user_choosen=models.CharField(max_length=50,default='')
 
 
-

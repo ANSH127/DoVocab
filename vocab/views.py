@@ -14,20 +14,25 @@ import math
 
 
 def home(request):
-    task1=userdetail.objects.filter(user=request.user)
-    # print(task1)
-    progress=userdetail.objects.filter(user=request.user,test_status="True")
-    # print(progress)
-    c=0
-    for i in progress:
-        c+=i.points
+    if request.user.is_authenticated:
+        task1=userdetail.objects.filter(user=request.user)
+        # print(task1)
+        progress=userdetail.objects.filter(user=request.user,test_status="True")
+        # print(progress)
+        c=0
+        for i in progress:
+            c+=i.points
 
-    # print(c)
-    Percent=math.ceil(c*100/300)
-    # print(Percent)
+        # print(c)
+        Percent=math.ceil(c*100/300)
+        # print(Percent)
 
-    params={'task':task1,'user':request.user,'count':c,'percent':Percent}
-    return render(request,"home1.html",params)
+        params={'task':task1,'user':request.user,'count':c,'percent':Percent}
+        return render(request,"home1.html",params)
+    else:
+        task2=Task_Result.objects.filter(sno=1)
+        print(task2)
+        return render(request,'home2.html',{'task':task2})
 
 
 
@@ -49,7 +54,22 @@ def test(request,myid):
         else:
             return render(request,'404.html')
     else:
-        return redirect('/')
+        if request.method=="POST":
+
+            taskid=myid
+            obj=Task_Result.objects.filter(sno=taskid)[0]
+            start=obj.s_range
+            end=obj.e_range
+            # print(start,end)
+            ques=Question.objects.filter(sno__gte=obj.s_range,sno__lte=obj.e_range)
+            params={'ques':ques,'start':start}
+
+            return render(request,"ques.html",params)
+        else:
+            return render(request,'404.html')
+
+
+
 
 
 
@@ -59,24 +79,47 @@ def result(request):
         # print(val)
         print(start,end)
         if request.method=="POST":
-            res=request.POST.get('mytxt','')
-            # print(res)
-            res=res[:len(res)-1]
-            choosen=res
-            res1=res.split(',')
-            obj=Question.objects.filter(sno__gte=start,sno__lte=end)
-            # print(obj)
-            # print(res1)
-            p=0
-            for i in range(len(obj)):
-                # print(obj[i].correct_opt)
-                if str(obj[i].correct_opt)==res1[i]:
-                    p+=1
-            # print("TOTAL POINTS",p)
-            userdetail.objects.filter(user=request.user,task=Task_Result.objects.filter(sno=val)[0]).update(test_status="True",points=p,user_choosen=choosen)
-            userdetail.objects.filter(user=request.user,task=Task_Result.objects.filter(sno=val+1)[0]).update(test_unlock="True")
+            if request.user.is_authenticated:
+
+                res=request.POST.get('mytxt','')
+                # print(res)
+                res=res[:len(res)-1]
+                choosen=res
+                res1=res.split(',')
+                obj=Question.objects.filter(sno__gte=start,sno__lte=end)
+                # print(obj)
+                # print(res1)
+                p=0
+                for i in range(len(obj)):
+                    # print(obj[i].correct_opt)
+                    if str(obj[i].correct_opt)==res1[i]:
+                        p+=1
+                # print("TOTAL POINTS",p)
+                userdetail.objects.filter(user=request.user,task=Task_Result.objects.filter(sno=val)[0]).update(test_status="True",points=p,user_choosen=choosen)
+                userdetail.objects.filter(user=request.user,task=Task_Result.objects.filter(sno=val+1)[0]).update(test_unlock="True")
         
-            return redirect("/")
+                return redirect("/")
+            
+            else:
+                res=request.POST.get('mytxt','')
+                print(res)
+                res=res[:len(res)-1]
+                choosen=res
+                res1=res.split(',')
+                p=0
+                obj=Question.objects.filter(sno__gte=start,sno__lte=end)
+
+                for i in range(len(obj)):
+                    # print(obj[i].correct_opt)
+                    if str(obj[i].correct_opt)==res1[i]:
+                        p+=1
+                print("TOTAL POINTS",p)
+                messages.success(request,f'You scored {p} points out of 10.To do more task and review your wrong answer SignUp! ')
+                return redirect('/')
+
+
+                
+
         else:
             return render(request,'404.html')
     
@@ -97,21 +140,25 @@ def handleSignup(request):
         password=request.POST.get('password','')
         password1=request.POST.get('password1','')
         # print(username,name,signup_email,password,password1)
+        if len(name.split())!=2:
+            messages.error(request,'Enter your full name')
+            return redirect('signup')
+
         fname=name.split()[0]
         lname=name.split()[1]
         # username should be atleast 10 character long
         if len(username)>10:
             messages.error(request,'username must be under 10 characters')
-            return redirect('/')
+            return redirect('signup')
         # username should be alphanumeric
         
         if not  username.isalnum():
             messages.error(request,'username should only cantain letters and number')
-            return redirect('/')
+            return redirect('signup')
         # password should be match with confirm password field
         if password!=password1:
             messages.error(request,'Password does not match')
-            return redirect('/')
+            return redirect('signup')
 
         
         myuser=User.objects.create_user(username,signup_email,password)
@@ -123,7 +170,7 @@ def handleSignup(request):
 
         userdetail2.save()
 
-        for i in range(2,4):
+        for i in range(2,8):
             userdetail2=userdetail(user=username,task=Task_Result.objects.filter(sno=i)[0])
             userdetail2.save()
 

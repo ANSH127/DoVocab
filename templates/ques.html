@@ -52,19 +52,19 @@
                                 required>
 
                             <li class="list-group-item">
-                                <input type="radio" id="1" name="opt{{item.sno}}" value="1" required>
-                                <label for="1">{{item.opt1}}</label>
+                                <input type="radio" id="{{item.sno}}1" name="opt{{item.sno}}" value="1" required>
+                                <label for="{{item.sno}}1">{{item.opt1}}</label>
                             </li>
                             <li class="list-group-item">
 
-                                <input type="radio" id="2" name="opt{{item.sno}}" value="2" required>
-                                <label for="2">{{item.opt2}}</label>
+                                <input type="radio" id="{{item.sno}}2" name="opt{{item.sno}}" value="2" required>
+                                <label for="{{item.sno}}2">{{item.opt2}}</label>
 
                             </li>
                             <li class="list-group-item">
 
-                                <input type="radio" id="3" name="opt{{item.sno}}" value="3" required>
-                                <label for="3">
+                                <input type="radio" id="{{item.sno}}3" name="opt{{item.sno}}" value="3" required>
+                                <label for="{{item.sno}}3">
                                     {{item.opt3}}
 
                                 </label>
@@ -72,8 +72,8 @@
                             </li>
                             <li class="list-group-item">
 
-                                <input type="radio" id="4" name="opt{{item.sno}}" value="4" required>
-                                <label for="4">
+                                <input type="radio" id="{{item.sno}}4" name="opt{{item.sno}}" value="4" required>
+                                <label for="{{item.sno}}4">
 
                                     {{item.opt4}}
                                 </label>
@@ -129,18 +129,21 @@
         var end=x+9
         var res = ''
         function func() {
+            document.getElementById('btn1').disabled=true;
+            document.getElementById('btn2').disabled=true;
             x = x + 1
             // console.log('yay')
 
 
 
             var ele = document.getElementsByName('opt' + String(x));
-            // console.log(ele)
+            console.log(ele)
 
             for (i = 0; i < ele.length; i++) {
                 if (ele[i].checked) {
                     // console.log(ele[i].value);
                     res = res + ele[i].value + ","
+                    console.log(res)
                     document.getElementById('mytxt').value = res;
 
 
@@ -157,6 +160,14 @@
 
 
             }
+
+
+            setTimeout(() => {
+                
+                document.getElementById('btn1').disabled=false;
+                document.getElementById('btn2').disabled=false;
+                
+            }, 1200);
         }
 
         
